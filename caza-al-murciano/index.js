@@ -59,15 +59,15 @@ function startGame() {
   return setInterval(pickJosemi, 1000);
 }
 
-const ctaButton = document.querySelector('.cta--start');
-ctaButton.addEventListener('click', function () {
+const ctaButtonNode = document.querySelector('.cta--start');
+ctaButtonNode.addEventListener('click', function () {
   totalPointsNode.innerText = 0;
   const gameIntervalId = startGame();
-  ctaButton.style.display = 'none';
+  ctaButtonNode.style.display = 'none';
 
   setTimeout(() => {
     clearInterval(gameIntervalId);
-    ctaButton.style.display = 'inline-block';
+    ctaButtonNode.style.display = 'inline-block';
     const container = document.querySelector('.fireworks');
     const fireworks = new Fireworks.default(container);
     fireworks.start();
@@ -102,4 +102,8 @@ document.addEventListener('mousedown', () => {
 
 document.addEventListener('mouseup', () => {
   hammerNode.classList.remove('hammer--pressed');
+});
+
+document.querySelector('.username-input').addEventListener('input', function (event) {
+  ctaButtonNode.disabled = !event.target.value;
 });

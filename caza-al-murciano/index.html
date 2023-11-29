@@ -1,7 +1,6 @@
 <html>
   <head>
     <meta title="Caza al murciano" />
-    <link rel="stylesheet" href="./normalize.css" />
     <link rel="stylesheet" href="./index.css" />
   </head>
   <body class="content">
@@ -12,7 +11,11 @@
         Cada vez que veas una versión de Josemi, dale con el ratón para sumar un punto. Los josemis soleados valen
         doble!
       </p>
-      <button class="cta cta--start">Empezar</button>
+      <div>
+        <input class="username-input" type="text" placeholder="Escribe tu nombre panita" />
+      </div>
+      <button class="cta cta--start" disabled>Empezar</button>
+      <a class="cta cta--ranking" href="./ranking.html">Ver clasificación</a>
     </div>
     <div class="josemis">
       <button class="josemi">
@@ -40,5 +43,7 @@
 
   <!-- UNPKG -->
   <script src="https://unpkg.com/fireworks-js@2.x/dist/index.umd.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js"></script>
+
   <script src="./index.js"></script>
 </html>
