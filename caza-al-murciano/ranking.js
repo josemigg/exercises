@@ -1,12 +1,6 @@
-const ranking = [
-  { position: 1, name: 'Pepito', scoring: 5 },
-  { position: 2, name: 'Pepito1', scoring: 5 },
-  { position: 3, name: 'Pepito2', scoring: 4 },
-  { position: 4, name: 'Pepito3', scoring: 4 },
-  { position: 5, name: 'Pepito4', scoring: 3 },
-  { position: 6, name: 'Pepito5', scoring: 2 },
-  { position: 7, name: 'Pepito6', scoring: 1 }
-];
+import ranking2 from './ranking2';
+
+console.log(ranking2);
 
 const writeRankingHtml = (rankingToWrite) => {
   const rankingNode = document.querySelector('.ranking');
@@ -24,4 +18,23 @@ const writeRankingHtml = (rankingToWrite) => {
   rankingNode.innerHTML = rankingHtml;
 };
 
-writeRankingHtml(ranking);
+fetch('https://randomuser.me/api/?results=20')
+  // El objeto response, contiene información acerca de la respuesta
+  // A través del método asíncrono .json, podemos parsear la respuesta
+  .then((response) => {
+    return response.json();
+  })
+  .then((response) => {
+    let scoring = 10;
+    const users = response.results.map((userInfo, index) => {
+      scoring -= 1;
+
+      return {
+        name: `${userInfo.name.first} ${userInfo.name.last}`,
+        position: index + 1,
+        scoring: scoring > 0 ? scoring : 0
+      };
+    });
+
+    writeRankingHtml(users);
+  });

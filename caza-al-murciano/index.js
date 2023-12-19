@@ -1,4 +1,4 @@
-function startGame() {
+function JosemisHunter(options) {
   const availableClasses = [
     'josemi--t',
     'josemi--b',
@@ -54,24 +54,43 @@ function startGame() {
     }, timerToUse);
   }
 
-  pickJosemi();
+  let gameIntervalId;
 
-  return setInterval(pickJosemi, 1000);
+  this.start = () => {
+    pickJosemi();
+    gameIntervalId = setInterval(pickJosemi, 1000);
+
+    setTimeout(() => {
+      clearInterval(gameIntervalId);
+      options.onGameStop();
+    }, options.roundTime);
+  };
+
+  this.stop = () => {
+    clearInterval(gameIntervalId);
+    options.onGameStop();
+  };
 }
 
+const usernameInputNode = document.querySelector('.username-input');
 const ctaButtonNode = document.querySelector('.cta--start');
+
+const container = document.querySelector('.fireworks');
+const fireworks = new Fireworks.default(container);
+const josemisGame = new JosemisHunter({
+  roundTime: 5000,
+  onGameStop: () => {
+    ctaButtonNode.style.display = 'inline-block';
+    fireworks.start();
+  }
+});
+
 ctaButtonNode.addEventListener('click', function () {
   totalPointsNode.innerText = 0;
-  const gameIntervalId = startGame();
+  josemisGame.start();
   ctaButtonNode.style.display = 'none';
 
-  setTimeout(() => {
-    clearInterval(gameIntervalId);
-    ctaButtonNode.style.display = 'inline-block';
-    const container = document.querySelector('.fireworks');
-    const fireworks = new Fireworks.default(container);
-    fireworks.start();
-  }, 5000);
+  localStorage.setItem('playerName', usernameInputNode.value);
 });
 
 const totalPointsNode = document.querySelector('#totalPoints');
@@ -104,6 +123,9 @@ document.addEventListener('mouseup', () => {
   hammerNode.classList.remove('hammer--pressed');
 });
 
-document.querySelector('.username-input').addEventListener('input', function (event) {
+usernameInputNode.addEventListener('input', function (event) {
   ctaButtonNode.disabled = !event.target.value;
 });
+
+usernameInputNode.value = localStorage.getItem('playerName');
+ctaButtonNode.disabled = !usernameInputNode.value;
