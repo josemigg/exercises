@@ -51,12 +51,12 @@ const tasks = [
   {
     text: 'Ir a clase',
     completed: true,
-    completedAt: '2025-01-9T15:00:40.088Z'
+    completedAt: '2025-01-09T15:00:40.088Z'
   },
   {
-    text: 'Comer a clase',
+    text: 'Comer',
     completed: true,
-    completedAt: '2025-01-9T14:00:40.088Z'
+    completedAt: '2025-01-09T14:00:40.088Z'
   },
   {
     text: 'Repasar javascript',
