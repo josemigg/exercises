@@ -1,6 +1,7 @@
 body {
   align-items: center;
   text-align: center;
+  background: #9e9898;
 }
 
 h1 {
@@ -32,4 +33,9 @@ div {
 img {
   max-width: 100%;
   max-height: 150px;
+}
+
+.button-selected {
+  background: #3661d5;
+  color: white;
 }
