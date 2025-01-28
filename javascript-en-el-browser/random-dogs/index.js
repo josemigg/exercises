@@ -5,7 +5,23 @@ console.log(perricosArray);
 
 // addPerrico();
 
-function renderPerrico() {}
+function addSocialListeners() {
+  document.querySelectorAll('.like').forEach((buttonNode) => {
+    buttonNode.addEventListener('click', function () {
+      const hermanico = buttonNode.previousElementSibling;
+      const likeCountNode = hermanico.querySelector('.like-count');
+      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+    });
+  });
+
+  document.querySelectorAll('.dislike').forEach((buttonNode) => {
+    buttonNode.addEventListener('click', function () {
+      console.log(buttonNode.closest('.card'));
+      const likeCountNode = buttonNode.closest('.card').querySelector('.dislike-count');
+      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+    });
+  });
+}
 
 function renderPerricoArray() {
   const dogList = document.querySelector('#dog-list');
@@ -22,14 +38,7 @@ function renderPerricoArray() {
     dogList.innerHTML += htmlAdd;
   });
 
-  document.querySelectorAll('.like').forEach((buttonNode) => {
-    buttonNode.addEventListener('click', function () {
-      console.log('me gusta clickado');
-      const hermanico = buttonNode.previousElementSibling;
-      const likeCountNode = hermanico.querySelector('.like-count');
-      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
-    });
-  });
+  addSocialListeners();
 }
 
 const addPerrico = async (addToStart) => {
@@ -43,7 +52,9 @@ const addPerrico = async (addToStart) => {
 
   const dogList = document.querySelector('#dog-list');
 
-  const htmlAdd = `<div class="card">
+  const isAnyFilterSelected = document.querySelector('.filter-selected');
+
+  const htmlAdd = `<div class="card" ${isAnyFilterSelected ? 'style="display:none"' : ''}>
   <img src="${perricoImg}" alt="Perro" />
   <br />
   <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
@@ -55,17 +66,15 @@ const addPerrico = async (addToStart) => {
   } else {
     dogList.innerHTML = dogList.innerHTML + htmlAdd;
   }
-
-  document.querySelectorAll('.like').forEach((buttonNode) => {
-    buttonNode.addEventListener('click', function () {
-      const hermanico = buttonNode.previousElementSibling;
-      const likeCountNode = hermanico.querySelector('.like-count');
-      likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
-    });
-  });
+  addSocialListeners();
 };
 
 document.querySelector('#add-1-perrico').addEventListener('click', function () {
+  const isFilterSelected = document.querySelector('#like-filter').classList.contains('filter-selected');
+  if (isFilterSelected) {
+    alert('no se puede bro');
+    return;
+  }
   addPerrico();
 });
 
@@ -81,14 +90,51 @@ document.querySelector('#add-5-perricos').addEventListener('click', function () 
   addPerrico();
 });
 
-document.querySelector('#like-filter').addEventListener('click', function () {
-  document.querySelectorAll('.like-count').forEach((likeCountNode) => {
-    if (likeCountNode.innerText === '') {
-      const cardNode = likeCountNode.closest('.card');
-      cardNode.style.display = 'none';
-    }
-  });
+const likeFilterButton = document.querySelector('#like-filter');
+
+likeFilterButton.addEventListener('click', function () {
+  likeFilterButton.classList.toggle('filter-selected');
+  filterPerricos();
 });
+
+const dislikeFilter = document.querySelector('#dislike-filter');
+
+dislikeFilter.addEventListener('click', function () {
+  dislikeFilter.classList.toggle('filter-selected');
+  filterPerricos();
+});
+
+function filterPerricos() {
+  const isLikeFilterSelected = likeFilterButton.classList.contains('filter-selected');
+  const isDislikeSelected = dislikeFilter.classList.contains('filter-selected');
+  console.log('filtering', {
+    isLikeFilterSelected,
+    isDislikeSelected
+  });
+
+  document.querySelectorAll('.card').forEach((perricoNode) => {
+    // si no hay ningún filtro aplicado, lo muestra
+    if (!isLikeFilterSelected && !isDislikeSelected) {
+      perricoNode.style.display = '';
+      return;
+    }
+    // si preciosismo aplicado y hay preciosisimo lo muestra
+    const likeCount = perricoNode.querySelector('.like-count').innerText;
+    if (likeCount !== '' && isLikeFilterSelected) {
+      perricoNode.style.display = '';
+      return;
+    }
+
+    // si feísimo aplicado y hay feísimo lo muestra
+    const dislikeCount = perricoNode.querySelector('.dislike-count').innerText;
+    if (dislikeCount !== '' && isDislikeSelected) {
+      perricoNode.style.display = '';
+      return;
+    }
+
+    perricoNode.style.display = 'none';
+  });
+}
 
 document.querySelector('#dislike-filter').addEventListener('click', function () {
   console.log('dislike filter clicked');
