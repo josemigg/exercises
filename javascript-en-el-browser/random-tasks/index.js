@@ -19,40 +19,41 @@ function getRandomArray() {
   return randomTasks;
 }
 
-function getTaskHtml(task) {
-  return `<div class="task">
-        <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
-        <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>
-      </div>`;
-}
-
 // Estas funciones serán las que iremos cambiando con los ejemplos
 function regenerateArray() {
   const tasks = getRandomArray();
-  console.log(tasks);
-  let newTasksHTML = '';
+  document.querySelector('#tasks').innerHTML = '';
 
   tasks.forEach((task) => {
-    newTasksHTML += getTaskHtml(task);
+    createTaskNode(task, true);
   });
-  document.querySelector('#tasks').innerHTML = newTasksHTML;
 }
 
-function addTask(addToEnd) {
-  const task = generateRandomTask();
+function createTaskNode(task, addToEnd) {
+  const taskNode = document.createElement('div');
+  taskNode.className = 'task';
 
-  const taskHtml = getTaskHtml(task);
+  taskNode.innerHTML = `
+    <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
+    <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>`;
 
   const tasksNode = document.querySelector('#tasks');
 
   if (addToEnd) {
-    tasksNode.innerHTML = tasksNode.innerHTML + taskHtml;
+    tasksNode.appendChild(taskNode);
   } else {
-    tasksNode.innerHTML = taskHtml + tasksNode.innerHTML;
+    tasksNode.prepend(taskNode);
   }
+
+  taskNode.addEventListener('click', function () {
+    console.log('hola', task.text);
+  });
 }
 
-function addLast() {}
+function addTask(addToEnd) {
+  const task = generateRandomTask();
+  addTask(task, addToEnd);
+}
 
 // event listeners para que los botones llamen a las funciones anteriores
 document.querySelector('#regenate').addEventListener('click', () => {
