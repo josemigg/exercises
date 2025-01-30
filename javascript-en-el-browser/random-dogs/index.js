@@ -1,9 +1,17 @@
 const perricosArray = ['https://images.dog.ceo/breeds/affenpinscher/n02110627_10439.jpg'];
 console.log(perricosArray);
 
+const timeoutId = setTimeout(() => {
+  document.querySelector('#add-warning').style.display = '';
+}, 3000);
 // console.log(getRandomDogImage());
 
 // addPerrico();
+
+function clearWarningMessage() {
+  clearTimeout(timeoutId);
+  document.querySelector('#add-warning').style.display = 'none';
+}
 
 function addSocialListeners() {
   document.querySelectorAll('.like').forEach((buttonNode) => {
@@ -70,19 +78,20 @@ const addPerrico = async (addToStart) => {
 };
 
 document.querySelector('#add-1-perrico').addEventListener('click', function () {
-  const isFilterSelected = document.querySelector('#like-filter').classList.contains('filter-selected');
-  if (isFilterSelected) {
-    alert('no se puede bro');
-    return;
-  }
+  clearWarningMessage();
+
   addPerrico();
 });
 
 document.querySelector('#add-1-perrico-start').addEventListener('click', function () {
+  clearWarningMessage();
+
   addPerrico(true);
 });
 
 document.querySelector('#add-5-perricos').addEventListener('click', function () {
+  clearWarningMessage();
+
   addPerrico();
   addPerrico();
   addPerrico();
@@ -141,3 +150,13 @@ document.querySelector('#dislike-filter').addEventListener('click', function () 
 });
 
 renderPerricoArray();
+
+let automaticPerrosCount = 0;
+const intervalId = setInterval(() => {
+  addPerrico();
+  automaticPerrosCount++;
+
+  if (automaticPerrosCount === 2) {
+    clearInterval(intervalId);
+  }
+}, 1000);
