@@ -19,22 +19,38 @@ function getRandomArray() {
   return randomTasks;
 }
 
-// Estas funciones serán las que iremos cambiando con los ejemplos
-function regenerateArray() {
-  const tasks = getRandomArray();
-  let newTasksHTML = '';
-
-  tasks.forEach((task) => {
-    newTasksHTML += `
-     <div class="task">
+function getTaskHtml(task) {
+  return `<div class="task">
         <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
         <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>
       </div>`;
+}
+
+// Estas funciones serán las que iremos cambiando con los ejemplos
+function regenerateArray() {
+  const tasks = getRandomArray();
+  console.log(tasks);
+  let newTasksHTML = '';
+
+  tasks.forEach((task) => {
+    newTasksHTML += getTaskHtml(task);
   });
   document.querySelector('#tasks').innerHTML = newTasksHTML;
 }
 
-function addFirst() {}
+function addTask(addToEnd) {
+  const task = generateRandomTask();
+
+  const taskHtml = getTaskHtml(task);
+
+  const tasksNode = document.querySelector('#tasks');
+
+  if (addToEnd) {
+    tasksNode.innerHTML = tasksNode.innerHTML + taskHtml;
+  } else {
+    tasksNode.innerHTML = taskHtml + tasksNode.innerHTML;
+  }
+}
 
 function addLast() {}
 
@@ -44,9 +60,9 @@ document.querySelector('#regenate').addEventListener('click', () => {
 });
 
 document.querySelector('#add-first').addEventListener('click', () => {
-  addFirst();
+  addTask(false);
 });
 
 document.querySelector('#add-last').addEventListener('click', () => {
-  addLast();
+  addTask(true);
 });
