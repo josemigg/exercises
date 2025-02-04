@@ -37,7 +37,7 @@ function createTaskNode(task, addToEnd) {
   taskNode.innerHTML = `
     <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
     <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>
-    <button class="${task.isFav ? 'fav' : ''}">${task.isFav ? '💝' : '💔'}</button>
+    <button class="${task.isFav ? 'fav' : ''}" style="display:none">${task.isFav ? '💝' : '💔'}</button>
     `;
 
   const tasksNode = document.querySelector('#tasks');
@@ -49,10 +49,20 @@ function createTaskNode(task, addToEnd) {
   }
 
   taskNode.addEventListener('click', function () {
+    console.log('contenedor tarea');
     const taskTextNode = taskNode.querySelector('span');
     const isCurrentlyCompleted = taskTextNode.classList.contains('completed');
     taskTextNode.classList.toggle('completed');
     taskNode.querySelector('.status').innerText = isCurrentlyCompleted ? 'pending' : 'completed';
+  });
+
+  const favButtonNode = taskNode.querySelector('button');
+  favButtonNode.addEventListener('click', function (event) {
+    console.log('botón fav');
+    event.stopPropagation();
+    const isCurrentlyFav = favButtonNode.classList.contains('fav');
+    favButtonNode.classList.toggle('fav');
+    favButtonNode.innerText = isCurrentlyFav ? '💔' : '💝';
   });
 }
 
