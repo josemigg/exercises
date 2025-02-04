@@ -7,7 +7,8 @@ function getRandomInt(min, max) {
 function generateRandomTask() {
   return {
     text: `Texto aleatorio número ${getRandomInt(1, 1000)}`,
-    isCompleted: getRandomInt(0, 1) === 1
+    isCompleted: getRandomInt(0, 1) === 1,
+    isFav: getRandomInt(0, 1) === 1
   };
 }
 
@@ -35,7 +36,9 @@ function createTaskNode(task, addToEnd) {
 
   taskNode.innerHTML = `
     <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
-    <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>`;
+    <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>
+    <button class="${task.isFav ? 'fav' : ''}">${task.isFav ? '💝' : '💔'}</button>
+    `;
 
   const tasksNode = document.querySelector('#tasks');
 
