@@ -46,7 +46,10 @@ function createTaskNode(task, addToEnd) {
   }
 
   taskNode.addEventListener('click', function () {
-    console.log('hola', task.text);
+    const taskTextNode = taskNode.querySelector('span');
+    const isCurrentlyCompleted = taskTextNode.classList.contains('completed');
+    taskTextNode.classList.toggle('completed');
+    taskNode.querySelector('.status').innerText = isCurrentlyCompleted ? 'pending' : 'completed';
   });
 }
 
