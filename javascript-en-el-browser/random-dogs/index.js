@@ -62,19 +62,34 @@ const addPerrico = async (addToStart) => {
 
   const isAnyFilterSelected = document.querySelector('.filter-selected');
 
-  const htmlAdd = `<div class="card" ${isAnyFilterSelected ? 'style="display:none"' : ''}>
+  const perricoCardElement = document.createElement('div');
+  perricoCardElement.className = 'card';
+  perricoCardElement.style.display = isAnyFilterSelected ? 'none' : '';
+
+  perricoCardElement.innerHTML = `
   <img src="${perricoImg}" alt="Perro" />
   <br />
   <p><span class="like-count"></span>❤️ <span class="dislike-count"></span>🤮</p>
-  <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>
-</div>`;
+  <button class="like">Preciosísimo</button> <button class="dislike">Feísisimo</button>`;
 
   if (addToStart) {
-    dogList.innerHTML = htmlAdd + dogList.innerHTML;
+    dogList.prepend(perricoCardElement);
   } else {
-    dogList.innerHTML = dogList.innerHTML + htmlAdd;
+    dogList.appendChild(perricoCardElement);
   }
-  addSocialListeners();
+
+  const likeButton = perricoCardElement.querySelector('.like');
+
+  likeButton.addEventListener('click', function () {
+    const likeCountNode = perricoCardElement.querySelector('.like-count');
+    likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+  });
+
+  const dislikeButton = perricoCardElement.querySelector('.dislike');
+  dislikeButton.addEventListener('click', function () {
+    const likeCountNode = perricoCardElement.querySelector('.dislike-count');
+    likeCountNode.innerText = Number(likeCountNode.innerText) + 1;
+  });
 };
 
 document.querySelector('#add-1-perrico').addEventListener('click', function () {
@@ -151,12 +166,12 @@ document.querySelector('#dislike-filter').addEventListener('click', function () 
 
 renderPerricoArray();
 
-let automaticPerrosCount = 0;
-const intervalId = setInterval(() => {
-  addPerrico();
-  automaticPerrosCount++;
+// let automaticPerrosCount = 0;
+// const intervalId = setInterval(() => {
+//   addPerrico();
+//   automaticPerrosCount++;
 
-  if (automaticPerrosCount === 2) {
-    clearInterval(intervalId);
-  }
-}, 1000);
+//   if (automaticPerrosCount === 2) {
+//     clearInterval(intervalId);
+//   }
+// }, 1000);
