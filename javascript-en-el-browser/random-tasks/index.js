@@ -52,7 +52,7 @@ function createTaskNode(task, addToEnd) {
 
 function addTask(addToEnd) {
   const task = generateRandomTask();
-  addTask(task, addToEnd);
+  createTaskNode(task, addToEnd);
 }
 
 // event listeners para que los botones llamen a las funciones anteriores
