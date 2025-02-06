@@ -64,6 +64,14 @@ function createTaskNode(task, addToEnd) {
     favButtonNode.classList.toggle('fav');
     favButtonNode.innerText = isCurrentlyFav ? '💔' : '💝';
   });
+
+  taskNode.addEventListener('mouseover', function () {
+    favButtonNode.style.display = '';
+  });
+
+  taskNode.addEventListener('mouseout', function () {
+    favButtonNode.style.display = 'none';
+  });
 }
 
 function addTask(addToEnd) {
