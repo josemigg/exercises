@@ -37,7 +37,7 @@ function createTaskNode(task, addToEnd) {
   taskNode.innerHTML = `
     <span class="${task.isCompleted ? 'completed' : ''}">${task.text}</span> -
     <span class="status">${task.isCompleted ? 'completed' : 'pending'}</span>
-    <button class="${task.isFav ? 'fav' : ''}" style="display:none">${task.isFav ? '💝' : '💔'}</button>
+    <button class="fav-button ${task.isFav ? 'fav' : ''}">${task.isFav ? '💝' : '💔'}</button>
     `;
 
   const tasksNode = document.querySelector('#tasks');
@@ -63,14 +63,6 @@ function createTaskNode(task, addToEnd) {
     const isCurrentlyFav = favButtonNode.classList.contains('fav');
     favButtonNode.classList.toggle('fav');
     favButtonNode.innerText = isCurrentlyFav ? '💔' : '💝';
-  });
-
-  taskNode.addEventListener('mouseover', function () {
-    favButtonNode.style.display = '';
-  });
-
-  taskNode.addEventListener('mouseout', function () {
-    favButtonNode.style.display = 'none';
   });
 }
 
