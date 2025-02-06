@@ -85,6 +85,7 @@ document.querySelector('#add-last').addEventListener('click', () => {
   addTask(true);
 });
 
+const formButton = document.querySelector('#create-task button');
 document.querySelector('#create-task').addEventListener('submit', function (event) {
   console.log(event);
   event.preventDefault();
@@ -94,7 +95,17 @@ document.querySelector('#create-task').addEventListener('submit', function (even
   const task = {
     text: taskText,
     isFav: false,
-    isCompleted: false
+    isCompleted: false,
+    id: Date.now()
   };
   createTaskNode(task, false);
+
+  event.target.reset();
+  formButton.disabled = true;
+});
+
+const taskTextNode = document.querySelector('[name=taskText]');
+taskTextNode.addEventListener('input', function (event) {
+  console.log(event.target.value);
+  formButton.disabled = event.target.value === '';
 });
