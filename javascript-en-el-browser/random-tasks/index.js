@@ -68,6 +68,7 @@ function createTaskNode(task, addToEnd) {
 
 function addTask(addToEnd) {
   const task = generateRandomTask();
+  console.log(task, addToEnd);
   createTaskNode(task, addToEnd);
 }
 
@@ -90,5 +91,10 @@ document.querySelector('#create-task').addEventListener('submit', function (even
 
   const formData = new FormData(event.target);
   const taskText = formData.get('taskText');
-  console.log(taskText);
+  const task = {
+    text: taskText,
+    isFav: false,
+    isCompleted: false
+  };
+  createTaskNode(task, false);
 });
