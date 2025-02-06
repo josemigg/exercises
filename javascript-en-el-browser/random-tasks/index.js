@@ -83,3 +83,12 @@ document.querySelector('#add-first').addEventListener('click', () => {
 document.querySelector('#add-last').addEventListener('click', () => {
   addTask(true);
 });
+
+document.querySelector('#create-task').addEventListener('submit', function (event) {
+  console.log(event);
+  event.preventDefault();
+
+  const formData = new FormData(event.target);
+  const taskText = formData.get('taskText');
+  console.log(taskText);
+});
