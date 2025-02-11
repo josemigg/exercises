@@ -9,16 +9,36 @@ function getTasks() {
 }
 
 const tasks = getTasks();
+let isCompletedFilterSelected = localStorage.getItem('isCompletedFilter') === 'true';
 
-tasks.forEach((task) => {
-  createTaskNode(task, true);
-});
+function renderTasksArray() {
+  const completedFilterButtonNode = document.querySelector('#completed-filter');
+
+  if (isCompletedFilterSelected) {
+    completedFilterButtonNode.classList.add('button-selected');
+  } else {
+    completedFilterButtonNode.classList.remove('button-selected');
+  }
+
+  const filteredTasks = isCompletedFilterSelected
+    ? tasks.filter((task) => {
+        return task.isCompleted;
+      })
+    : tasks;
+
+  document.querySelector('#tasks').innerHTML = '';
+
+  filteredTasks.forEach((task) => {
+    createTaskNode(task, true);
+  });
+}
 
 function saveTasks() {
   const tasksAsString = JSON.stringify(tasks);
   localStorage.setItem('tasks', tasksAsString);
 }
 
+renderTasksArray();
 /**
    const task = {
     isFav: false,
@@ -54,38 +74,6 @@ function editTaskByPropName(taskId, propName, propValue) {
   });
   tasks[taskIndex][propName] = propValue;
   saveTasks();
-}
-
-function getRandomInt(min, max) {
-  min = Math.ceil(min);
-  max = Math.floor(max);
-  return Math.floor(Math.random() * (max - min + 1)) + min;
-}
-
-function generateRandomTask() {
-  return {
-    text: `Texto aleatorio número ${getRandomInt(1, 1000)}`,
-    isCompleted: getRandomInt(0, 1) === 1,
-    isFav: getRandomInt(0, 1) === 1
-  };
-}
-
-function getRandomArray() {
-  const randomTasks = [];
-  for (let i = 0; i < 10; i++) {
-    randomTasks.push(generateRandomTask());
-  }
-  return randomTasks;
-}
-
-// Estas funciones serán las que iremos cambiando con los ejemplos
-function regenerateArray() {
-  const tasks = getRandomArray();
-  document.querySelector('#tasks').innerHTML = '';
-
-  tasks.forEach((task) => {
-    createTaskNode(task, true);
-  });
 }
 
 function createTaskNode(task, addToEnd) {
@@ -127,25 +115,6 @@ function createTaskNode(task, addToEnd) {
   });
 }
 
-function addTask(addToEnd) {
-  const task = generateRandomTask();
-  console.log(task, addToEnd);
-  createTaskNode(task, addToEnd);
-}
-
-// event listeners para que los botones llamen a las funciones anteriores
-document.querySelector('#regenate').addEventListener('click', () => {
-  regenerateArray();
-});
-
-document.querySelector('#add-first').addEventListener('click', () => {
-  addTask(false);
-});
-
-document.querySelector('#add-last').addEventListener('click', () => {
-  addTask(true);
-});
-
 const formButton = document.querySelector('#create-task button');
 document.querySelector('#create-task').addEventListener('submit', function (event) {
   console.log(event);
@@ -159,7 +128,9 @@ document.querySelector('#create-task').addEventListener('submit', function (even
     isCompleted: false,
     id: Date.now()
   };
-  createTaskNode(task, false);
+  if (!isCompletedFilterSelected) {
+    createTaskNode(task, false);
+  }
 
   tasks.unshift(task);
   saveTasks();
@@ -172,4 +143,11 @@ const taskTextNode = document.querySelector('[name=taskText]');
 taskTextNode.addEventListener('input', function (event) {
   console.log(event.target.value);
   formButton.disabled = event.target.value === '';
+});
+
+const completedFilterButtonNode = document.querySelector('#completed-filter');
+completedFilterButtonNode.addEventListener('click', function () {
+  isCompletedFilterSelected = !isCompletedFilterSelected;
+  renderTasksArray();
+  localStorage.setItem('isCompletedFilter', isCompletedFilterSelected);
 });
