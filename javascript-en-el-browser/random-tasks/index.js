@@ -1,3 +1,61 @@
+function getTasks() {
+  const tasksAsString = localStorage.getItem('tasks');
+
+  if (!tasksAsString) {
+    return [];
+  }
+
+  return JSON.parse(tasksAsString);
+}
+
+const tasks = getTasks();
+
+tasks.forEach((task) => {
+  createTaskNode(task, true);
+});
+
+function saveTasks() {
+  const tasksAsString = JSON.stringify(tasks);
+  localStorage.setItem('tasks', tasksAsString);
+}
+
+/**
+   const task = {
+    isFav: false,
+   };
+  
+
+ */
+
+function editTask(taskId, propsToChange) {
+  // coger el nuevo objeto tarea
+  // buscar la posición que ocupa en el array
+  // modificar la tarea en el array
+  // meter el array en el local Storage
+  const taskIndex = tasks.findIndex((task) => {
+    return taskId === task.id;
+  });
+  tasks[taskIndex] = {
+    ...tasks[taskIndex],
+    ...propsToChange
+  };
+  console.log(tasks);
+  saveTasks();
+}
+
+/** Otra forma de hacerlo, esta vez por propName  */
+function editTaskByPropName(taskId, propName, propValue) {
+  // coger el nuevo objeto tarea
+  // buscar la posición que ocupa en el array
+  // modificar la tarea en el array
+  // meter el array en el local Storage
+  const taskIndex = tasks.findIndex((task) => {
+    return taskId === task.id;
+  });
+  tasks[taskIndex][propName] = propValue;
+  saveTasks();
+}
+
 function getRandomInt(min, max) {
   min = Math.ceil(min);
   max = Math.floor(max);
@@ -49,20 +107,23 @@ function createTaskNode(task, addToEnd) {
   }
 
   taskNode.addEventListener('click', function () {
-    console.log('contenedor tarea');
     const taskTextNode = taskNode.querySelector('span');
     const isCurrentlyCompleted = taskTextNode.classList.contains('completed');
     taskTextNode.classList.toggle('completed');
     taskNode.querySelector('.status').innerText = isCurrentlyCompleted ? 'pending' : 'completed';
+
+    editTask(task.id, { isCompleted: !isCurrentlyCompleted });
+    editTaskByPropName(task.id, 'isCompleted', !isCurrentlyCompleted);
   });
 
   const favButtonNode = taskNode.querySelector('button');
   favButtonNode.addEventListener('click', function (event) {
-    console.log('botón fav');
     event.stopPropagation();
     const isCurrentlyFav = favButtonNode.classList.contains('fav');
     favButtonNode.classList.toggle('fav');
     favButtonNode.innerText = isCurrentlyFav ? '💔' : '💝';
+
+    editTask(task.id, { isFav: !isCurrentlyFav, pepito: 'tasd' });
   });
 }
 
@@ -99,6 +160,9 @@ document.querySelector('#create-task').addEventListener('submit', function (even
     id: Date.now()
   };
   createTaskNode(task, false);
+
+  tasks.unshift(task);
+  saveTasks();
 
   event.target.reset();
   formButton.disabled = true;
