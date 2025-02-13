@@ -62,7 +62,8 @@ function enableAllAddPerricoButtons() {
 }
 
 const addPerrico = async (addToStart) => {
-  const perricoImg = await getRandomDogImage();
+  const breed = document.querySelector('[name=breeds]').value;
+  const perricoImg = await getRandomDogImage(breed);
 
   if (addToStart) {
     perricosArray.unshift(perricoImg);
@@ -176,6 +177,11 @@ function filterPerricos() {
 
 document.querySelector('#dislike-filter').addEventListener('click', function () {
   console.log('dislike filter clicked');
+});
+
+document.querySelector('#test').addEventListener('click', async function () {
+  const response = await getBreeds();
+  console.log(response);
 });
 
 renderPerricoArray();
