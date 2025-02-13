@@ -49,6 +49,18 @@ function renderPerricoArray() {
   addSocialListeners();
 }
 
+function disableAllAddPerricoButtons() {
+  document.querySelectorAll('.add-button').forEach((buttonNode) => {
+    buttonNode.disabled = true;
+  });
+}
+
+function enableAllAddPerricoButtons() {
+  document.querySelectorAll('.add-button').forEach((buttonNode) => {
+    buttonNode.disabled = false;
+  });
+}
+
 const addPerrico = async (addToStart) => {
   const perricoImg = await getRandomDogImage();
 
@@ -92,26 +104,28 @@ const addPerrico = async (addToStart) => {
   });
 };
 
-document.querySelector('#add-1-perrico').addEventListener('click', function () {
+document.querySelector('#add-1-perrico').addEventListener('click', async function () {
   clearWarningMessage();
 
-  addPerrico();
+  disableAllAddPerricoButtons();
+  await addPerrico();
+  enableAllAddPerricoButtons();
 });
 
-document.querySelector('#add-1-perrico-start').addEventListener('click', function () {
+document.querySelector('#add-1-perrico-start').addEventListener('click', async function () {
   clearWarningMessage();
 
-  addPerrico(true);
+  disableAllAddPerricoButtons();
+  await addPerrico(true);
+  enableAllAddPerricoButtons();
 });
 
-document.querySelector('#add-5-perricos').addEventListener('click', function () {
+document.querySelector('#add-5-perricos').addEventListener('click', async function () {
   clearWarningMessage();
 
-  addPerrico();
-  addPerrico();
-  addPerrico();
-  addPerrico();
-  addPerrico();
+  disableAllAddPerricoButtons();
+  await Promise.all([addPerrico(), addPerrico(), addPerrico(), addPerrico(), addPerrico()]);
+  enableAllAddPerricoButtons();
 });
 
 const likeFilterButton = document.querySelector('#like-filter');
