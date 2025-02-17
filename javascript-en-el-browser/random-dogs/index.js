@@ -1,5 +1,7 @@
-const perricosArray = ['https://images.dog.ceo/breeds/affenpinscher/n02110627_10439.jpg'];
-console.log(perricosArray);
+// antes tenía urls ahora va a tener un objeto con url de la imagen y la raza.
+const perricosArray = [];
+// Me va a guardar cuántos perricos hay de cada raza, va a guardar algo tipo chihuahua: 2
+const breedsCount = {};
 
 const timeoutId = setTimeout(() => {
   document.querySelector('#add-warning').style.display = '';
@@ -7,6 +9,27 @@ const timeoutId = setTimeout(() => {
 // console.log(getRandomDogImage());
 
 // addPerrico();
+
+async function createBreedsSelect() {
+  // llamo a la función del endpoint;
+  // cojo la respuesta que es un objeto clave valor donde la clave es el nombre de la raza y el valor un array con subrazas
+  // y lo convierto en un array solo con las claves utilizando Object.keys
+  // recorro el array de Object keys creando el html del select
+  const breeds = await getBreeds();
+  const breedsList = Object.keys(breeds);
+  console.log(breedsList);
+
+  let breedsOptions = ''; //'<option value="">Random</option>';
+  breedsList.forEach((breed) => {
+    breedsOptions += `<option value="${breed}">${breed}</option>`;
+  });
+
+  console.log(breedsOptions);
+
+  document.querySelector('#breeds-picker').innerHTML = breedsOptions;
+}
+
+createBreedsSelect();
 
 function clearWarningMessage() {
   clearTimeout(timeoutId);
@@ -61,15 +84,40 @@ function enableAllAddPerricoButtons() {
   });
 }
 
+function updateBreedsFilters(breed) {
+  const breedsFiltersNode = document.querySelector('.breed-filters');
+
+  breedsFiltersNode.style.display = '';
+
+  const buttonId = `${breed}-filter`;
+
+  if (!breedsCount[breed]) {
+    breedsCount[breed] = 1;
+
+    const filterNode = document.createElement('button');
+    filterNode.id = buttonId;
+    filterNode.innerText = `${breed} (1)`;
+    breedsFiltersNode.appendChild(filterNode);
+
+    return;
+  }
+
+  breedsCount[breed] += 1;
+  const filterButtonNode = breedsFiltersNode.querySelector(`#${buttonId}`);
+  filterButtonNode.innerHTML = `${breed} (${breedsCount[breed]})`;
+}
+
 const addPerrico = async (addToStart) => {
   const breed = document.querySelector('[name=breeds]').value;
-  const perricoImg = await getRandomDogImage(breed);
+  const perricoInfo = await getRandomDogImage(breed);
+  const perricoImg = perricoInfo.imgUrl;
 
   if (addToStart) {
-    perricosArray.unshift(perricoImg);
+    perricosArray.unshift(perricoInfo);
   } else {
-    perricosArray.push(perricoImg);
+    perricosArray.push(perricoInfo);
   }
+  updateBreedsFilters(breed);
 
   const dogList = document.querySelector('#dog-list');
 
