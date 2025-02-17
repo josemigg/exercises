@@ -1,3 +1,9 @@
+function getRandomInt(min, max) {
+  min = Math.ceil(min);
+  max = Math.floor(max);
+  return Math.floor(Math.random() * (max - min + 1)) + min;
+}
+
 async function getRandomDogImage(breed) {
   const url =
     breed === '' ? 'https://dog.ceo/api/breeds/image/random' : `https://dog.ceo/api/breed/${breed}/images/random`;
@@ -11,7 +17,13 @@ async function getRandomDogImage(breed) {
     const json = await response.json();
 
     // TODO random breed
-    return { breed, imgUrl: json.message };
+    return {
+      id: Date.now() + Math.random(),
+      breed,
+      imgUrl: json.message,
+      dislikeCount: getRandomInt(0, 2),
+      likeCount: getRandomInt(0, 1)
+    };
   } catch (error) {
     console.error(error.message);
   }
