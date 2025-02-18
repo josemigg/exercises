@@ -40,8 +40,9 @@ function clearWarningMessage() {
 }
 
 function renderPerricoArray() {
-  const hasAnyFiltersApplied = filtersApplied.breeds.length === 0 && !filtersApplied.like && !filtersApplied.dislike;
-  const filteredArray = hasAnyFiltersApplied
+  const hasAnyFiltersApplied = filtersApplied.breeds.length > 0 || filtersApplied.like || filtersApplied.dislike;
+
+  const filteredArray = !hasAnyFiltersApplied
     ? perricosArray
     : perricosArray.filter((perrico) => {
         if (filtersApplied.breeds.length > 0 && !filtersApplied.breeds.includes(perrico.breed)) {
@@ -56,7 +57,7 @@ function renderPerricoArray() {
           return false;
         }
 
-        if (filtersApplied.dislike && perrico.dislikecount === 0) {
+        if (filtersApplied.dislike && perrico.dislikeCount === 0) {
           return false;
         }
 
@@ -196,14 +197,16 @@ const likeFilterButton = document.querySelector('#like-filter');
 
 likeFilterButton.addEventListener('click', function () {
   likeFilterButton.classList.toggle('filter-selected');
-  filterPerricos();
+  filtersApplied.like = !filtersApplied.like;
+  renderPerricoArray();
 });
 
 const dislikeFilter = document.querySelector('#dislike-filter');
 
 dislikeFilter.addEventListener('click', function () {
   dislikeFilter.classList.toggle('filter-selected');
-  filterPerricos();
+  filtersApplied.dislike = !filtersApplied.dislike;
+  renderPerricoArray();
 });
 
 function filterPerricos() {
@@ -237,15 +240,6 @@ function filterPerricos() {
     perricoNode.style.display = 'none';
   });
 }
-
-document.querySelector('#dislike-filter').addEventListener('click', function () {
-  console.log('dislike filter clicked');
-});
-
-document.querySelector('#test').addEventListener('click', async function () {
-  const response = await getBreeds();
-  console.log(response);
-});
 
 renderPerricoArray();
 
